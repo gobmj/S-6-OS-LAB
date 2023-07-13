@@ -19,13 +19,11 @@ int main() {
     }
     int sum = 0;
 
-    // Create the pipe
     if (pipe(pipe_fd) == -1) {
         perror("Pipe creation failed");
         exit(EXIT_FAILURE);
     }
 
-    // Fork the process
     child_pid = fork();
 
     if (child_pid == -1) {
@@ -34,12 +32,11 @@ int main() {
     }
 
     if (child_pid == 0) {
-        // Child process
 
-        // Close the write end of the pipe
+        // Close the write end
         close(pipe_fd[1]);
 
-        // Read numbers from the parent process and calculate the sum
+        // Read numbers from the parent process
         int number;
         while (read(pipe_fd[0], &number, sizeof(int)) > 0) {
             sum += number;
@@ -51,9 +48,8 @@ int main() {
         // Display the sum
         printf("Child process: Sum = %d\n", sum);
     } else {
-        // Parent process
 
-        // Close the read end of the pipe
+        // Close the read end
         close(pipe_fd[0]);
 
         // Send numbers to the child process through the pipe
@@ -61,10 +57,9 @@ int main() {
             write(pipe_fd[1], &numbers[i], sizeof(int));
         }
 
-        // Close the write end of the pipe
+        // Closing the write end
         close(pipe_fd[1]);
 
-        // Wait for the child process to finish
         wait(NULL);
 
         printf("Parent process: Sent %d numbers to child process.\n", n);

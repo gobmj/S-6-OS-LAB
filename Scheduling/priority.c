@@ -1,6 +1,5 @@
 #include <stdio.h>
  
-//Function to swap two variables
 void swap(int *a,int *b)
 {
     int temp=*a;
@@ -13,7 +12,6 @@ int main()
     printf("Enter Number of Processes: ");
     scanf("%d",&n);
  
-    // b is array for burst time, p for priority and index for process id
     int b[n],p[n],index[n];
     for(int i=0;i<n;i++)
     {
@@ -25,7 +23,6 @@ int main()
     {
         int a=p[i],m=i;
  
-        //Finding out highest priority element and placing it at its desired position
         for(int j=i;j<n;j++)
         {
             if(p[j] > a)
@@ -35,29 +32,24 @@ int main()
             }
         }
  
-        //Swapping processes
         swap(&p[i], &p[m]);
         swap(&b[i], &b[m]);
         swap(&index[i],&index[m]);
     }
  
-    // T stores the starting time of process
-    int t=0;
- 
-    //Printing scheduled process
-    printf("Order of process Execution is\n");
-    for(int i=0;i<n;i++)
-    {
-        printf("P%d is executed from %d to %d\n",index[i],t,t+b[i]);
-        t+=b[i];
-    }
-    printf("\n");
     printf("Process Id     Burst Time   Wait Time    TurnAround Time\n");
     int wait_time=0;
+    float sum1=0;
+    float sum2=0;
     for(int i=0;i<n;i++)
     {
         printf("P%d          %d          %d          %d\n",index[i],b[i],wait_time,wait_time + b[i]);
-        wait_time += b[i];
+        sum1+=wait_time;
+        sum2+=wait_time+b[i];
+        wait_time += b[i];    
     }
+    printf("\nAverage Waiting Time: %f",sum1/n);
+    printf("\nAverage Turnaround Time: %f",sum2/n);
+	
     return 0;
 }
