@@ -15,6 +15,7 @@ int main()
     	sum_burst_time+= burst_time[i];
   	}
   	burst_time[9] = 9999;
+  	printf("\n\nProcess\t|Turnaround Time|Waiting Time\n\n");
   	for (time = 0; time < sum_burst_time;)
   	{
     	smallest = 9;

@@ -2,14 +2,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 #define BUFFER_SIZE 100
 
 int main() {
     int pipe_fd[2];
     pid_t child_pid;
-    int numbers[] = {1, 2, 3, 4, 5};  // Numbers to be sent by the parent process
-    int num_count = sizeof(numbers) / sizeof(numbers[0]);  // Number of elements in the array
+    int numbers[20],n;
+    printf("\nEnter the Number of Numbers (max 20): ");
+    scanf("%d",&n);
+  	printf("\nEnter the Numbers: ");
+    for (int i=0;i<n;i++)
+    {
+    	scanf("%d",&numbers[i]);
+    }
     int sum = 0;
 
     // Create the pipe
@@ -50,7 +57,7 @@ int main() {
         close(pipe_fd[0]);
 
         // Send numbers to the child process through the pipe
-        for (int i = 0; i < num_count; i++) {
+        for (int i = 0; i < n; i++) {
             write(pipe_fd[1], &numbers[i], sizeof(int));
         }
 
@@ -60,7 +67,7 @@ int main() {
         // Wait for the child process to finish
         wait(NULL);
 
-        printf("Parent process: Sent %d numbers to child process.\n", num_count);
+        printf("Parent process: Sent %d numbers to child process.\n", n);
     }
 
     return 0;

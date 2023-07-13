@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 #define BUFFER_SIZE 100
 
@@ -12,7 +13,7 @@ int is_prime(int number) {
 
     for (int i = 2; i * i <= number; i++) {
         if (number % i == 0) {
-            return 0;
+            return 1;
         }
     }
 
@@ -21,10 +22,16 @@ int is_prime(int number) {
 
 int main() {
     int pipe_fd[2];
-    pid_t child_pid;
-    int numbers[] = {2, 3, 4, 5, 6, 7, 8, 9, 10};  // Numbers to be sent by the parent process
-    int num_count = sizeof(numbers) / sizeof(numbers[0]);  // Number of elements in the array
-
+    pid_t child_pid,n;
+    int numbers[20];
+	printf("\nEnter the Number of Numbers: ");
+	scanf("%d",&n);
+	printf("\nEnter the Numbers: ");
+	for(int i=0;i<n;i++)
+	{
+		scanf("%d",&numbers[i]);
+	}
+	
     // Create the pipe
     if (pipe(pipe_fd) == -1) {
         perror("Pipe creation failed");
@@ -51,6 +58,7 @@ int main() {
             if (is_prime(number)) {
                 // Write the prime number back to the parent process
                 write(pipe_fd[1], &number, sizeof(int));
+
             }
         }
 
@@ -66,7 +74,7 @@ int main() {
         close(pipe_fd[0]);
 
         // Send numbers to the child process through the pipe
-        for (int i = 0; i < num_count; i++) {
+        for (int i = 0; i < n; i++) {
             write(pipe_fd[1], &numbers[i], sizeof(int));
         }
 
@@ -78,6 +86,7 @@ int main() {
 
         // Read and display prime numbers returned by the child process
         int prime_number;
+        printf("Number read from parent by child = %d",prime_number);
         while (read(pipe_fd[0], &prime_number, sizeof(int)) > 0) {
             printf("Parent process: Prime number = %d\n", prime_number);
         }
