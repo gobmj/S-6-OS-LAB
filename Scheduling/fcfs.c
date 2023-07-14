@@ -1,4 +1,5 @@
 #include<stdio.h>
+
 int main()
 {
 	int n,bt[30],wait_t[30],turn_ar_t[30],av_wt_t=0,avturn_ar_t=0,i,j;

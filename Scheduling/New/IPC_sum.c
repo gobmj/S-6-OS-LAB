@@ -6,11 +6,12 @@
 
 #define BUFFER_SIZE 100
 
-int main() {
+int main() 
+{
     int pipe_fd[2];
     pid_t child_pid;
     int numbers[20],n;
-    printf("\nEnter the Number of Numbers (max 20): ");
+    printf("\nEnter the Number of Numbers: ");
     scanf("%d",&n);
   	printf("\nEnter the Numbers: ");
     for (int i=0;i<n;i++)
@@ -18,52 +19,38 @@ int main() {
     	scanf("%d",&numbers[i]);
     }
     int sum = 0;
-
-    if (pipe(pipe_fd) == -1) {
+    if (pipe(pipe_fd) == -1)
+    {
         perror("Pipe creation failed");
         exit(EXIT_FAILURE);
     }
-
     child_pid = fork();
-
-    if (child_pid == -1) {
+    if (child_pid == -1) 
+    {
         perror("Fork failed");
         exit(EXIT_FAILURE);
     }
-
-    if (child_pid == 0) {
-
-        // Close the write end
+    if (child_pid == 0) 
+    {
         close(pipe_fd[1]);
-
-        // Read numbers from the parent process
         int number;
-        while (read(pipe_fd[0], &number, sizeof(int)) > 0) {
+        while (read(pipe_fd[0], &number, sizeof(int)) > 0) 
+        {
             sum += number;
         }
-
-        // Close the read end of the pipe
         close(pipe_fd[0]);
-
-        // Display the sum
         printf("Child process: Sum = %d\n", sum);
-    } else {
-
-        // Close the read end
+    } 
+    else 
+    {
         close(pipe_fd[0]);
-
-        // Send numbers to the child process through the pipe
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) 
+        {
             write(pipe_fd[1], &numbers[i], sizeof(int));
         }
-
-        // Closing the write end
         close(pipe_fd[1]);
-
         wait(NULL);
-
         printf("Parent process: Sent %d numbers to child process.\n", n);
     }
-
     return 0;
 }

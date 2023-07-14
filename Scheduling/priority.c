@@ -6,12 +6,12 @@ void swap(int *a,int *b)
     *a=*b;
     *b=temp;
 }
+
 int main()
 {
     int n;
     printf("Enter Number of Processes: ");
     scanf("%d",&n);
- 
     int b[n],p[n],index[n];
     for(int i=0;i<n;i++)
     {
@@ -36,7 +36,6 @@ int main()
         swap(&b[i], &b[m]);
         swap(&index[i],&index[m]);
     }
- 
     printf("Process Id     Burst Time   Wait Time    TurnAround Time\n");
     int wait_time=0;
     float sum1=0;
@@ -50,6 +49,5 @@ int main()
     }
     printf("\nAverage Waiting Time: %f",sum1/n);
     printf("\nAverage Turnaround Time: %f",sum2/n);
-	
     return 0;
 }
