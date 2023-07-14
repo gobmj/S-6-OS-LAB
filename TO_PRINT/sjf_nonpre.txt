@@ -1,0 +1,70 @@
+SJF
+
+Name: Govind M J
+Register No: 20220041
+
+CODE
+
+#include<stdio.h>
+
+int main() 
+{
+	int time, burst_time[10], at[10], sum_burst_time = 0, smallest, n, i;
+ 	int sumt = 0,sumw = 0;
+  	printf("Enter the Number of Processes: ");
+  	scanf("%d",&n);
+  	for(i = 0; i < n; i++)
+	{
+    	printf("Enter the Arrival time for Process[%d]: ", i + 1);
+    	scanf("%d",&at[i]);
+    	printf("Enter the Burst time for Process[%d]: ", i + 1);
+    	scanf("%d",&burst_time[i]);
+    	sum_burst_time+= burst_time[i];
+  	}
+  	burst_time[9] = 9999;
+  	printf("\n\nProcess\t|Turnaround Time|Waiting Time\n\n");
+  	for (time = 0; time < sum_burst_time;)
+  	{
+    	smallest = 9;
+    	for (i = 0; i < n; i++)
+    	{
+      		if (at[i] <= time && burst_time[i] > 0 && burst_time[i] < burst_time[smallest])
+      			{
+      				smallest = i;
+      			}
+    	}
+    	printf("P[%d]\t|\t%d\t|\t%d\n", smallest + 1, time + burst_time[smallest] - at[smallest], time - at[smallest]);
+    	sumt += time + burst_time[smallest] - at[smallest];
+    	sumw += time - at[smallest];
+    	time += burst_time[smallest];
+    	burst_time[smallest] = 0;
+  	}
+  	printf("\n\n average waiting time = %f", sumw * 1.0 / n);
+  	printf("\n\n average turnaround time = %f", sumt * 1.0 / n);
+  	return 0;
+}
+
+OUTPUT
+
+Enter the Number of Processes: 4
+Enter the Arrival time for Process[1]: 0
+Enter the Burst time for Process[1]: 2
+Enter the Arrival time for Process[2]: 0
+Enter the Burst time for Process[2]: 8
+Enter the Arrival time for Process[3]: 0
+Enter the Burst time for Process[3]: 1
+Enter the Arrival time for Process[4]: 0
+Enter the Burst time for Process[4]: 4
+
+
+Process	|Turnaround Time|Waiting Time
+
+P[3]	|	1	|	0
+P[1]	|	3	|	1
+P[4]	|	7	|	3
+P[2]	|	15	|	7
+
+
+ average waiting time = 2.750000
+
+ average turnaround time = 6.500000

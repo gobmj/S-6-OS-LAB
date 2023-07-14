@@ -1,0 +1,76 @@
+IPC SUM OF 'N' NUMBERS
+
+Name: Govind M J
+Register No: 20220041
+
+CODE
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#define BUFFER_SIZE 100
+
+int main() 
+{
+    int pipe_fd[2];
+    pid_t child_pid;
+    int numbers[20],n;
+    printf("\nEnter the Number of Numbers: ");
+    scanf("%d",&n);
+  	printf("\nEnter the Numbers: ");
+    for (int i=0;i<n;i++)
+    {
+    	scanf("%d",&numbers[i]);
+    }
+    int sum = 0;
+    if (pipe(pipe_fd) == -1)
+    {
+        perror("Pipe creation failed");
+        exit(EXIT_FAILURE);
+    }
+    child_pid = fork();
+    if (child_pid == -1) 
+    {
+        perror("Fork failed");
+        exit(EXIT_FAILURE);
+    }
+    if (child_pid == 0) 
+    {
+        close(pipe_fd[1]);
+        int number;
+        while (read(pipe_fd[0], &number, sizeof(int)) > 0) 
+        {
+            sum += number;
+        }
+        close(pipe_fd[0]);
+        printf("Child process: Sum = %d\n", sum);
+    } 
+    else 
+    {
+        close(pipe_fd[0]);
+        for (int i = 0; i < n; i++) 
+        {
+            write(pipe_fd[1], &numbers[i], sizeof(int));
+        }
+        close(pipe_fd[1]);
+        wait(NULL);
+        printf("Parent process: Sent %d numbers to child process.\n", n);
+    }
+    return 0;
+}
+
+OUTPUT
+
+Enter the Number of Numbers: 5
+
+Enter the Numbers: 1
+2
+3
+4
+5
+Child process: Sum = 15
+Parent process: Sent 5 numbers to child process.
+

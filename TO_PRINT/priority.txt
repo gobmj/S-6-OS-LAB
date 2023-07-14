@@ -1,0 +1,80 @@
+PRIORITY SCHEDULING
+
+Name: Govind M J
+Register No: 20220041
+
+CODE
+
+#include <stdio.h>
+ 
+void swap(int *a,int *b)
+{
+    int temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+int main()
+{
+    int n;
+    printf("Enter Number of Processes: ");
+    scanf("%d",&n);
+    int b[n],p[n],index[n];
+    for(int i=0;i<n;i++)
+    {
+        printf("Enter Burst Time and Priority Value for Process %d: ",i+1);
+        scanf("%d %d",&b[i],&p[i]);
+        index[i]=i+1;
+    }
+    for(int i=0;i<n;i++)
+    {
+        int a=p[i],m=i;
+ 
+        for(int j=i;j<n;j++)
+        {
+            if(p[j] > a)
+            {
+                a=p[j];
+                m=j;
+            }
+        }
+ 
+        swap(&p[i], &p[m]);
+        swap(&b[i], &b[m]);
+        swap(&index[i],&index[m]);
+    }
+    printf("Process Id     Burst Time   Wait Time    TurnAround Time\n");
+    int wait_time=0;
+    float sum1=0;
+    float sum2=0;
+    for(int i=0;i<n;i++)
+    {
+        printf("P%d\t\t%d\t\t%d\t\t%d\n",index[i],b[i],wait_time,wait_time + b[i]);
+        sum1+=wait_time;
+        sum2+=wait_time+b[i];
+        wait_time += b[i];    
+    }
+    printf("\nAverage Waiting Time: %f",sum1/n);
+    printf("\nAverage Turnaround Time: %f",sum2/n);
+    return 0;
+}
+
+OUTPUT
+
+Enter Number of Processes: 4
+Enter Burst Time and Priority Value for Process 1: 5
+1
+Enter Burst Time and Priority Value for Process 2: 7
+6
+Enter Burst Time and Priority Value for Process 3: 2
+4
+Enter Burst Time and Priority Value for Process 4: 3
+5
+Process Id     Burst Time   Wait Time    TurnAround Time
+P2		7		0		7
+P4		3		7		10
+P3		2		10		12
+P1		5		12		17
+
+Average Waiting Time: 7.250000
+Average Turnaround Time: 11.500000
